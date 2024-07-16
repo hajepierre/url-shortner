@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hajepierre.urlshortner.dtos.UrlModel;
 import com.hajepierre.urlshortner.entities.Urls;
@@ -19,6 +21,13 @@ public class UrlShortnerService {
     @Autowired
     private UrlRepository repo;
 
+    /**
+     * The method that checks whether a given id can be allowed to a new record
+     * It return False if the id exists in the db, and True if it does not
+     * 
+     * @param id
+     * @return
+     */
     public boolean isIdValid(String id) {
         log.info("Checking whether Id: {} can be allocated to the url", id);
         Optional<Urls> resp = repo.findById(id);
@@ -26,7 +35,7 @@ public class UrlShortnerService {
             log.info(
                     "No url with id: {} was found in the system, thus, it is can be allowed to the new url to be registered",
                     id);
-            return false;
+            return true;
         }
         return false;
     }
@@ -58,6 +67,13 @@ public class UrlShortnerService {
         return id;
     }
 
+    /**
+     * The method that registers a new url to the db
+     * 
+     * @param dto
+     * @return
+     * @throws Exception
+     */
     public String registerUrl(UrlModel dto) throws Exception {
         if (dto.getId() == null) {
             String id = generateId();
@@ -77,11 +93,28 @@ public class UrlShortnerService {
 
     }
 
-    public Optional<Urls> getUrlById(String id) {
+    /**
+     * The method that retries url from the db given the id
+     * 
+     * @param id
+     * @return
+     */
+    public Urls getUrlById(String id) throws ResponseStatusException {
         log.info("Checking whether id: {} exists in the system ...", id);
-        return repo.findById(id);
+        Optional<Urls> response = repo.findById(id);
+        if (response.isPresent()) {
+            return response.get();
+        }
+        log.warn("No record with id {} was found in the system. Thus the record cannot be fulfilled.", id);
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "No url with the specified id was found in the system");
     }
 
+    /**
+     * The method that delete url record from the db given the id
+     * 
+     * @param id
+     */
     public void deleteUrlById(String id) {
         log.warn("Delete url presented by id: {} in the system ...", id);
         repo.deleteById(id);

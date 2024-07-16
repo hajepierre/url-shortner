@@ -35,7 +35,7 @@ public class UrlModel {
         obj.put("url", url);
 
         if(id!=null){
-            obj.put("url", url);
+            obj.put("id", id);
         }
 
         if(ttl!=null){
