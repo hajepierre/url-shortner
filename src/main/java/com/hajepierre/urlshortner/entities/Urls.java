@@ -11,8 +11,7 @@ import com.hajepierre.urlshortner.dtos.UrlModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// By default it will be none expiry
-@RedisHash(timeToLive = -1)
+@RedisHash("urls")
 @Data
 @NoArgsConstructor
 public class Urls implements Serializable {
@@ -27,7 +26,7 @@ public class Urls implements Serializable {
     public Urls(UrlModel dto) {
         this.id = dto.getId();
         this.ttl = dto.getTtl() == null ? -1L : dto.getTtl();
-        this.url=dto.getUrl();
+        this.url = dto.getUrl();
     }
 
 }

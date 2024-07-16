@@ -62,12 +62,29 @@ public class UrlShortnerService {
         if (dto.getId() == null) {
             String id = generateId();
             if (id == null) {
+                log.warn(
+                        "Unable to generate url id. The system may fail to generate the id if all the availble ids are already in use!");
                 throw new Exception("Unable to generate the Id for the url. Try again later");
             }
             dto.setId(id);
         }
-        return null;
+        log.info(null);
+        Urls response = repo.save(new Urls(dto));
+        if (response == null) {
+            throw new Exception("Unable to registered the new url for the time being. Try again later.");
+        }
+        return dto.getId();
 
+    }
+
+    public Optional<Urls> getUrlById(String id) {
+        log.info("Checking whether id: {} exists in the system ...", id);
+        return repo.findById(id);
+    }
+
+    public void deleteUrlById(String id) {
+        log.warn("Delete url presented by id: {} in the system ...", id);
+        repo.deleteById(id);
     }
 
 }

@@ -18,8 +18,13 @@ public class Response {
     private String description;
 
     @Schema(description = "Url Id", name = "id", type = "string", example = "1234")
-    @Nullable()
     private String id;
+
+    public Response(String id) {
+        this.id = id;
+        status = "SUCCESS";
+        description = "Request handled successfully";
+    }
 
     @Override()
     public String toString() {

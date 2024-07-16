@@ -1,14 +1,21 @@
 package com.hajepierre.urlshortner.controllers;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hajepierre.urlshortner.dtos.Response;
 import com.hajepierre.urlshortner.dtos.UrlModel;
+import com.hajepierre.urlshortner.entities.Urls;
+import com.hajepierre.urlshortner.services.UrlShortnerService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,22 +25,41 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
 @Slf4j
 public class ApplicationController {
 
+    @Autowired
+    private UrlShortnerService service;
+
     @Operation(summary = "Register Url to be shortened")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Url registered successfully", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
             @ApiResponse(responseCode = "400", description = "Malformed request object", content = @Content),
+            @ApiResponse(responseCode = "503", description = "Something happened while handling the request", content = @Content),
             @ApiResponse(responseCode = "409", description = "The specified Id already exists in the system", content = @Content) })
     @PostMapping("/")
     public Response registerUrl(@RequestBody() @Valid UrlModel data) {
         log.info("Incoming request to register a new url to the shortner. Object received ==> {}", data.toString());
-        return null;
+        if (data.getId() != null) {
+            boolean isValid = service.isIdValid(data.getId());
+            if (!isValid) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT, "The specified id: " + data.getId()
+                                + " is already is use. Specify a different id and try again");
+            }
+        }
+        try {
+            String id = service.registerUrl(data);
+            return new Response(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_GATEWAY, e.getMessage());
+        }
     }
 
     @Operation(summary = "Delete url by id")
@@ -44,7 +70,13 @@ public class ApplicationController {
     @DeleteMapping("/{id}")
     public Response unregisterUrl(@PathVariable String id) {
         log.info("Incoming request to delete/unregister the url presented by the id: {} ", id);
-        return null;
+        Optional<Urls> response = service.getUrlById(id);
+        if (response.isPresent()) {
+            this.service.deleteUrlById(id);
+            return new Response(id);
+        }
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "No url the specified id was found in the system");
     }
 
     @Operation(summary = "Resolve shortened url")
@@ -55,6 +87,16 @@ public class ApplicationController {
     @GetMapping("/{id}")
     public void redirectToOriginalUrl(@PathVariable String id, HttpServletResponse resp) {
         log.info("Incoming request to resolve the url presented by the id: {} ", id);
+        Optional<Urls> response = service.getUrlById(id);
+        if (response.isPresent()) {
+            try {
+               resp.sendRedirect(response.get().getUrl()); 
+            } catch (Exception e) {
+                log.warn("The following exception was thrown while while handling url resolution: {}", e.getMessage());
+            }
+        }
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "No url the specified id was found in the system");
 
     }
 }

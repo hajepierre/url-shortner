@@ -19,7 +19,7 @@ public class UrlModel {
     @Schema(description = "User Specified Url id", name = "id", type = "string", example = "1234", requiredMode = RequiredMode.NOT_REQUIRED)
     private String id;
 
-    @Min(-1)
+    @Min(1)
     @Nullable()
     @Schema(description = "User specified expiry time in seconds!", name = "ttl", type = "integer", example = "60", requiredMode = RequiredMode.NOT_REQUIRED)
     private Long ttl;
