@@ -1,14 +1,11 @@
+FROM maven:3.8.6-openjdk-18-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml -DskipTests=true clean package
+
 # Use an official OpenJDK runtime as a parent image
 FROM amazoncorretto:17
-
-# Set the working directory in the container
 WORKDIR /app
-
-# Copy the application JAR file into the container
-COPY ./target/url_shortner.jar /app/url_shortner.jar
-
-# Expose the port that your Spring Boot application will run on
+COPY --from=build /home/app/target/url_shortner.jar /app/url_shortner.jar
 EXPOSE 8080
-
-# Specify the command to run on container startup
 ENTRYPOINT ["java","-jar","/app/url_shortner.jar"]

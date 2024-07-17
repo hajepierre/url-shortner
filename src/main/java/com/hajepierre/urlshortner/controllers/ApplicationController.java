@@ -1,7 +1,5 @@
 package com.hajepierre.urlshortner.controllers;
 
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,12 +21,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin

@@ -2,7 +2,9 @@ package com.hajepierre.urlshortner.controllers;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -85,7 +87,7 @@ public class ApplicationControllerTests {
 
     @Test
     public void testUrlRegistrationSucessfully() throws Exception {
-        UrlModel obj = new UrlModel("1", 60L, "https://example.com");
+        UrlModel obj = new UrlModel("2", 60L, "https://example.com");
 
         ResultActions response = mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_JSON)
