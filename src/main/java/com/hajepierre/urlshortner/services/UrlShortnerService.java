@@ -49,7 +49,7 @@ public class UrlShortnerService {
          * case)=62
          */
         int length = 1;
-        while (length > 62 && !isGenerated) {
+        while (length <= 62 && !isGenerated) {
             log.info("Generating all candidate ids of length {} ", length);
 
             List<String> candidates = Utils.getAllCandidateIds(length);
@@ -77,6 +77,7 @@ public class UrlShortnerService {
     public String registerUrl(UrlModel dto) throws Exception {
         if (dto.getId() == null) {
             String id = generateId();
+            System.out.println(">>>>>>>>>>>>>>ID: "+id);
             if (id == null) {
                 log.warn(
                         "Unable to generate url id. The system may fail to generate the id if all the availble ids are already in use!");

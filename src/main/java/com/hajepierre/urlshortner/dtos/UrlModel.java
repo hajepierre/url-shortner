@@ -24,7 +24,7 @@ public class UrlModel {
     @Schema(description = "User specified expiry time in seconds!", name = "ttl", type = "integer", example = "60", requiredMode = RequiredMode.NOT_REQUIRED)
     private Long ttl;
 
-    @NotBlank
+    @NotBlank(message = "Url is required")
     @Schema(description = "Url", name = "url", type = "string", example = "http://example.com", requiredMode = RequiredMode.REQUIRED)
     @Pattern(regexp = "(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z0-9]{2,}(\\.[a-zA-Z0-9]{2,})(\\.[a-zA-Z0-9]{2,})?", message = "Kindly enter a valid url")
     private String url;
