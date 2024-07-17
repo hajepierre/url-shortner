@@ -66,13 +66,14 @@
 			<version>2.5.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.14.0</version>
-		</dependency>
+            <groupId>com.github.kstyrc</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.6</version>
+        </dependency>
 	</dependencies>
 
 	<build>
+		 <finalName>url_shortner</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

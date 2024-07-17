@@ -23,9 +23,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin
@@ -43,7 +43,7 @@ public class ApplicationController {
             @ApiResponse(responseCode = "503", description = "Something happened while handling the request", content = @Content),
             @ApiResponse(responseCode = "409", description = "The specified Id already exists in the system", content = @Content) })
     @PostMapping("/")
-    public Response registerUrl(@RequestBody() @Valid UrlModel data) {
+    public Response registerUrl(@Valid @RequestBody() UrlModel data) {
         log.info("Incoming request to register a new url to the shortner. Object received ==> {}", data.toString());
         if (data.getId() != null) {
             boolean isValid = service.isIdValid(data.getId());

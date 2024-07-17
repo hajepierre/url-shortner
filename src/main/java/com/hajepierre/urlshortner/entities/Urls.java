@@ -8,12 +8,14 @@ import org.springframework.data.redis.core.TimeToLive;
 
 import com.hajepierre.urlshortner.dtos.UrlModel;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @RedisHash("urls")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Urls implements Serializable {
     @Id
     private String id;

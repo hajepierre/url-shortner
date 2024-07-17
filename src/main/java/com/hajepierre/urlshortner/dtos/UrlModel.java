@@ -11,9 +11,13 @@ import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UrlModel {
     @Nullable()
     @Schema(description = "User Specified Url id", name = "id", type = "string", example = "1234", requiredMode = RequiredMode.NOT_REQUIRED)
