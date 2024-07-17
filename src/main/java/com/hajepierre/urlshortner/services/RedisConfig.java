@@ -8,11 +8,8 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.core.RedisKeyValueAdapter;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Configuration
 @EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
-@Slf4j
 public class RedisConfig {
       @Bean
     JedisConnectionFactory jedisConnectionFactory() {
